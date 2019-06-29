@@ -200,4 +200,26 @@ class BallLineUpDownView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : BallLineUpDownView) {
+
+        private val animator : Animator = Animator(view)
+        private val blud : BallLineUpDown = BallLineUpDown(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            blud.draw(canvas, paint)
+            animator.animate {
+                blud.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            blud.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
