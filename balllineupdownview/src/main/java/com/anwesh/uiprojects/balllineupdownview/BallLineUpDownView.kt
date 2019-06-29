@@ -21,6 +21,7 @@ val sizeFactor : Float = 2.9f
 val foreColor : Int = Color.parseColor("#0D47A1")
 val backColor : Int = Color.parseColor("#BDBDBD")
 val rFactor : Float = 4f
+val delay : Long = 20
 
 fun Int.inverse() : Float = 1f / this
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
@@ -46,8 +47,10 @@ fun Canvas.drawBallsLineUp(sc : Float, size : Float, paint : Paint) {
     var y1 : Float = y
     for (j in 0..(lines - 1)) {
         val scj : Float = sc.divideScale(j, lines)
-        x = x1 + gap * scj
-        y = y1 + 2 * size * (1 - 2 * (j % 2)) * scj
+        if (scj > 0) {
+            x = x1 + gap * scj
+            y = y1 + 2 * size * (1 - 2 * (j % 2)) * scj
+        }
         drawBallLineUp(x, y, x1, y1, size, paint)
         x1 += gap * Math.floor(scj.toDouble()).toFloat()
         y1 += 2 * size * (1 - 2 * (j % 2)) * Math.floor(scj.toDouble()).toFloat()
@@ -115,7 +118,7 @@ class BallLineUpDownView(ctx : Context) : View(ctx) {
             if (animated) {
                 cb()
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(delay)
                     view.invalidate()
                 } catch(ex : Exception) {
                 }
