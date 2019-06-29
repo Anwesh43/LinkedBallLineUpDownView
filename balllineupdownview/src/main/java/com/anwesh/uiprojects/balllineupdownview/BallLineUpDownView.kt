@@ -225,4 +225,13 @@ class BallLineUpDownView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : BallLineUpDownView {
+            val view : BallLineUpDownView = BallLineUpDownView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
