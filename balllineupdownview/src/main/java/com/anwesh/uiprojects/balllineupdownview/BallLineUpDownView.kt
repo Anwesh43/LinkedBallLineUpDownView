@@ -47,10 +47,10 @@ fun Canvas.drawBallsLineUp(sc : Float, size : Float, paint : Paint) {
     for (j in 0..(lines - 1)) {
         val scj : Float = sc.divideScale(j, lines)
         x = x1 + gap * scj
-        y = y1 + 2 * size * (1 - 2 * j) * scj
-        x1 += gap * Math.floor(scj.toDouble()).toFloat()
-        y1 += 2 * size * (1 - 2 * j) * Math.floor(scj.toDouble()).toFloat()
+        y = y1 + 2 * size * (1 - 2 * (j % 2)) * scj
         drawBallLineUp(x, y, x1, y1, size, paint)
+        x1 += gap * Math.floor(scj.toDouble()).toFloat()
+        y1 += 2 * size * (1 - 2 * (j % 2)) * Math.floor(scj.toDouble()).toFloat()
     }
 }
 
