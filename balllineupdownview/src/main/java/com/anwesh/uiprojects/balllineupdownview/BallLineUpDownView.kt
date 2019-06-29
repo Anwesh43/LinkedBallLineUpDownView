@@ -16,10 +16,11 @@ val nodes : Int = 5
 val lines : Int = 3
 val scGap : Float = 0.05f
 val scDiv : Double = 0.51
-val strokeFactror : Int = 90
+val strokeFactor : Int = 90
 val sizeFactor : Float = 2.9f
 val foreColor : Int = Color.parseColor("#0D47A1")
 val backColor : Int = Color.parseColor("#BDBDBD")
+val rFactor : Float = 4f
 
 fun Int.inverse() : Float = 1f / this
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
@@ -30,3 +31,42 @@ fun Float.mirrorValue(a : Int, b : Int) : Float {
     return (1 - k) * a.inverse() + k * b.inverse()
 }
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
+
+fun Canvas.drawBallLineUp(x : Float, y : Float, x1 : Float, y1 : Float, size : Float, paint : Paint) {
+    val r : Float = size / rFactor
+    drawCircle(x, y, r, paint)
+    drawLine(x1, y1, x, y, paint)
+}
+
+fun Canvas.drawBallsLineUp(sc : Float, size : Float, paint : Paint) {
+    var gap : Float = (2 * size) / lines
+    var x : Float = -size
+    var y : Float = -size
+    var x1 : Float = x
+    var y1 : Float = y
+    for (j in 0..(lines - 1)) {
+        val scj : Float = sc.divideScale(j, lines)
+        x = x1 + gap * scj
+        y = y1 + 2 * size * (1 - 2 * j) * scj
+        x1 += gap * Math.floor(scj.toDouble()).toFloat()
+        y1 += 2 * size * (1 - 2 * j) * Math.floor(scj.toDouble()).toFloat()
+        drawBallLineUp(x, y, x1, y1, size, paint)
+    }
+}
+
+fun Canvas.drawBLUDNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    paint.color = foreColor
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    save()
+    translate(w / 2, gap * (i + 1))
+    rotate(90f * sc2)
+    drawBallsLineUp(sc1, size, paint)
+    restore()
+}
